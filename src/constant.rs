@@ -1,0 +1,1 @@
+pub const TEST : &str = "This is a  test";

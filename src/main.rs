@@ -1,6 +1,10 @@
+mod constant;
+use std::fs::{self, File};
+use std::path::Path;
 use clap::*;
 use dialoguer::*;
 use dialoguer::theme::ColorfulTheme;
+use constant::TEST;
 
 #[derive(Parser, Debug)]
 struct CLI {
@@ -11,11 +15,14 @@ struct CLI {
 #[derive(Subcommand, Debug)]
 enum Options {
     Init {
+        /// Initialize Prisma ORM
         #[clap(short, long)]
         option_one : bool,
+        /// Initialize Drizzle ORM
         #[clap(short, long)]
         option_two : bool,
-    }
+    },
+    List,
 }
 
 fn main(){
@@ -40,16 +47,14 @@ fn main(){
                             .default(0)
                             .interact()
                             .unwrap();
-                match selection {
-                    0 => {
-                        println!("You selected prisma")
-                    }
-                    1 => {
-                        println!("You selected drizzle")
-                    }
-                    _ => {}
-                }
+                println!("You selected: {}", a[selection]);
             }
-        }
+        },
+        Options::List => {
+            let paths = fs::read_dir(".").unwrap();
+            for path in paths {
+                println!("Name: {}", path.unwrap().path().display());
+            }
+        },
     }
 }
